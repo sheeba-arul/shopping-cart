@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.shopping.cart.tdd.Item;
 import com.shopping.cart.tdd.ItemType;
+import com.shopping.cart.tdd.OfferType;
 import com.shopping.cart.tdd.ShoppingCart;
 
 /**
@@ -110,5 +111,79 @@ public class AppTest {
 		Assert.assertEquals(new BigDecimal("3.15"), cart.getTotalPrice());		
 	}
 
+	@Test
+	public void applyBuyExactlyOneGetOneFreeForApples()
+	{
+		ShoppingCart cart = new ShoppingCart();		
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.setBuyOneGetOneOffer(ItemType.APPLE, OfferType.BUY_ONE_GET_ONE_FREE, applePrice);
+		cart.checkout();
+		Assert.assertEquals(applePrice, cart.getTotalPrice());		
+		
+	}
 	
+	@Test
+	public void applyBuyManyForEachGetOneFreeForApples()
+	{
+		ShoppingCart cart = new ShoppingCart();		
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.setBuyOneGetOneOffer(ItemType.APPLE, OfferType.BUY_ONE_GET_ONE_FREE, applePrice);
+		cart.checkout();
+		Assert.assertEquals(new BigDecimal("1.20"), cart.getTotalPrice());		
+		
+	}
+	
+	@Test
+	public void applyBuyExactlyThreePay2ForOranges()
+	{
+		ShoppingCart cart = new ShoppingCart();		
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.setBuyThreeForTwoOffer(ItemType.ORANGE, OfferType.BUY_THREE_PAY_FOR_TWO, orangePrice);
+		cart.checkout();
+		Assert.assertEquals(new BigDecimal("0.50"), cart.getTotalPrice());		
+		
+	}
+	
+	@Test
+	public void applyBuyManyForEachThreePayForTwoOranges()
+	{
+		ShoppingCart cart = new ShoppingCart();		
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.setBuyThreeForTwoOffer(ItemType.ORANGE, OfferType.BUY_THREE_PAY_FOR_TWO, orangePrice);
+		cart.checkout();
+		Assert.assertEquals(new BigDecimal("1.00"), cart.getTotalPrice());		
+		
+	}
+	
+	
+	//(3 apples = 1.80)+ (5 oranges = 1.25) = total = 3.05
+	//apply discount : 1.20 + 1.00 =2.20
+	@Test
+	public void applyDifferentItemsAndApplyOffer()
+	{
+		ShoppingCart cart = new ShoppingCart();	
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.addItem(new Item(ItemType.APPLE, applePrice), 1);
+		cart.setBuyOneGetOneOffer(ItemType.APPLE, OfferType.BUY_ONE_GET_ONE_FREE, applePrice);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.addItem(new Item(ItemType.ORANGE, orangePrice), 1);
+		cart.setBuyThreeForTwoOffer(ItemType.ORANGE, OfferType.BUY_THREE_PAY_FOR_TWO, orangePrice);
+		cart.checkout();
+		Assert.assertEquals(new BigDecimal("2.20"), cart.getTotalPrice());		
+		
+	}
+
 }
